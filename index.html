@@ -1,327 +1,325 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR-JMT</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR-JMT</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-    <style>
-        body { font-family: 'Sarabun', sans-serif; background-image: url('https://img2.pic.in.th/pic/Cover808900978ea91797.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; }
-        .register-card { background-color: rgba(255, 255, 255, 0.98); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border: none; display: flex; flex-direction: row; max-width: 900px; width: 100%; }
-        .register-image-side { background: url('https://img2.pic.in.th/pic/Gemini_Generated_Image_rqnmqyrqnmqyrqnm.png') center/cover; width: 45%; }
-        .register-form-side { width: 55%; padding: 3rem; }
-        .card-title { font-weight: 700; color: #333; margin-bottom: 0.5rem; font-size: 1.75rem; }
-        .card-subtitle { color: #6c757d; margin-bottom: 2rem; font-size: 1.1rem; }
-        .form-label { font-weight: 500; color: #495057; }
-        .input-group-text { background-color: transparent; border-right: none; color: #343a40; font-size: 1.1rem; }
-        .form-control { border-left: none; border-radius: 0 0.25rem 0.25rem 0; padding-left: 0; transition: all 0.3s ease; font-size: 1rem; }
-        .form-control:focus { box-shadow: none; border-color: #555; }
-        .btn-success { background: linear-gradient(45deg, #1E8449, #28B463); border: none; border-radius: 50px; padding: 12px 30px; font-weight: 700; font-size: 1rem; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(30, 132, 73, 0.3); }
-        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(30, 132, 73, 0.4); }
-        #camera-container video, #camera-container img, #id-card-camera-container video, #id-card-camera-container img { border: 2px solid #eee; border-radius: 10px; }
-        .form-check-label { font-size: 0.9rem; }
-        @media (max-width: 768px) {
-            .register-image-side { display: none; }
-            .register-form-side { width: 100%; padding: 2rem; }
-            .register-card { flex-direction: column; }
-        }
-    </style>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-image: url('https://img2.pic.in.th/pic/Cover808900978ea91797.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; }
+        .register-card { background-color: rgba(255, 255, 255, 0.98); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border: none; display: flex; flex-direction: row; max-width: 900px; width: 100%; }
+        .register-image-side { background: url('https://img2.pic.in.th/pic/Gemini_Generated_Image_rqnmqyrqnmqyrqnm.png') center/cover; width: 45%; }
+        .register-form-side { width: 55%; padding: 3rem; }
+        .card-title { font-weight: 700; color: #333; margin-bottom: 0.5rem; font-size: 1.75rem; }
+        .card-subtitle { color: #6c757d; margin-bottom: 2rem; font-size: 1.1rem; }
+        .form-label { font-weight: 500; color: #495057; }
+        .input-group-text { background-color: transparent; border-right: none; color: #343a40; font-size: 1.1rem; }
+        .form-control { border-left: none; border-radius: 0 0.25rem 0.25rem 0; padding-left: 0; transition: all 0.3s ease; font-size: 1rem; }
+        .form-control:focus { box-shadow: none; border-color: #555; }
+        .btn-success { background: linear-gradient(45deg, #1E8449, #28B463); border: none; border-radius: 50px; padding: 12px 30px; font-weight: 700; font-size: 1rem; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(30, 132, 73, 0.3); }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(30, 132, 73, 0.4); }
+        #camera-container video, #camera-container img, #id-card-camera-container video, #id-card-camera-container img { border: 2px solid #eee; border-radius: 10px; }
+        .form-check-label { font-size: 0.9rem; }
+        @media (max-width: 768px) {
+            .register-image-side { display: none; }
+            .register-form-side { width: 100%; padding: 2rem; }
+            .register-card { flex-direction: column; }
+        }
+    </style>
 </head>
 <body>
 
 <div class="register-card">
-    <div class="register-image-side"></div>
-    <div class="register-form-side">
-        <div class="text-center mb-4">
-            <img src="https://img5.pic.in.th/file/secure-sv1/-1920-x-300-px.png" alt="Company Logo" style="max-width: 250px; margin-bottom: 1.5rem;">
-            <h3 class="card-title">ยืนยันตัวตนพนักงาน</h3>
-            <p class="card-subtitle">กรุณากรอกข้อมูลให้ถูกต้อง!</p>
-        </div>
+    <div class="register-image-side"></div>
+    <div class="register-form-side">
+        <div class="text-center mb-4">
+            <img src="https://img5.pic.in.th/file/secure-sv1/-1920-x-300-px.png" alt="Company Logo" style="max-width: 250px; margin-bottom: 1.5rem;">
+            <h3 class="card-title">ยืนยันตัวตนพนักงาน</h3>
+            <p class="card-subtitle">กรุณากรอกข้อมูลให้ถูกต้อง!</p>
+        </div>
 
-        <form method="post" autocomplete="off" name="hello-sheet" id="registerForm">
-            <div class="mb-3">
-                <label for="fullName" class="form-label">Full Name</label>
-                <div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="fa-solid fa-user"></i></span></div><input type="text" class="form-control" id="fullName" placeholder="ชื่อ-สกุล" name="ชื่อ-สกุล" required></div>
-            </div>
-            <div class="mb-3">
-                <label for="IdEmployee" class="form-label">Employee ID</label>
-                <div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="fa-solid fa-id-card-clip"></i></span></div><input type="text" class="form-control" id="IdEmployee" placeholder="รหัสพนักงาน" name="รหัสพนักงาน" required></div>
-            </div>
-            <div class="mb-3">
-                <label for="phone" class="form-label">Phone Number</label>
-                <div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="fa-solid fa-phone"></i></span></div><input type="tel" class="form-control" id="phone" placeholder="เบอร์โทรศัพท์" name="เบอร์โทร" required></div>
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">สแกนใบหน้า (ถ่ายรูป)</label>
-                <div id="camera-container" class="text-center bg-light p-2" style="border-radius: 10px; position: relative;">
-                    <video id="video" width="100%" height="auto" autoplay playsinline style="display: none;"></video>
-                    <canvas id="canvas" style="display:none;"></canvas>
-                    <img id="face-overlay" 
-                         src="https://img2.pic.in.th/pic/-9fbd25e4342ef1a57.png" 
-                         alt="ตัวอย่างกรอบใบหน้า" 
-                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none; pointer-events: none; border: none; opacity: 0.7;">
-                    <img id="photo-preview" src="" alt="รูปที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin-top: 10px;" />
-                     <div id="camera-placeholder">
-                         <i class="fas fa-camera fa-3x text-muted"></i>
-                         <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูป</p>
-                     </div>
-                </div>
-                <div class="text-center mt-2">
-                    <button type="button" id="start-camera-btn" class="btn btn-info btn-sm"> <i class="fas fa-camera"></i> เปิดกล้อง</button>
-                    <button type="button" id="capture-btn" class="btn btn-primary btn-sm" style="display: none;"> <i class="fas fa-circle-check"></i> ถ่ายรูป</button>
-                    <button type="button" id="switch-camera-btn" class="btn btn-secondary btn-sm" style="display: none; margin-left: 5px;"> <i class="fas fa-sync-alt"></i> สลับกล้อง</button>
-                    </div>
-                <input type="hidden" name="facePhoto" id="facePhotoData" required>
-            </div>
+        <form method="post" autocomplete="off" name="hello-sheet" id="registerForm">
+            <div class="mb-3">
+                <label for="fullName" class="form-label">Full Name</label>
+                <div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="fa-solid fa-user"></i></span></div><input type="text" class="form-control" id="fullName" placeholder="ชื่อ-สกุล" name="ชื่อ-สกุล" required></div>
+            </div>
+            <div class="mb-3">
+                <label for="IdEmployee" class="form-label">Employee ID</label>
+                <div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="fa-solid fa-id-card-clip"></i></span></div><input type="text" class="form-control" id="IdEmployee" placeholder="รหัสพนักงาน" name="รหัสพนักงาน" required></div>
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="fa-solid fa-phone"></i></span></div><input type="tel" class="form-control" id="phone" placeholder="เบอร์โทรศัพท์" name="เบอร์โทร" required></div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">สแกนใบหน้า (ถ่ายรูป)</label>
+                <div id="camera-container" class="text-center bg-light p-2" style="border-radius: 10px; position: relative;">
+                    <video id="video" width="100%" height="auto" autoplay playsinline style="display: none;"></video>
+                    <canvas id="canvas" style="display:none;"></canvas>
+                    <img id="face-overlay" 
+                         src="https://img2.pic.in.th/pic/-9fbd25e4342ef1a57.png" 
+                         alt="ตัวอย่างกรอบใบหน้า" 
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none; pointer-events: none; border: none; opacity: 0.7;">
+                    <img id="photo-preview" src="" alt="รูปที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin-top: 10px;" />
+                     <div id="camera-placeholder">
+                         <i class="fas fa-camera fa-3x text-muted"></i>
+                         <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูป</p>
+                     </div>
+                </div>
+                <div class="text-center mt-2">
+                    <button type="button" id="start-camera-btn" class="btn btn-info btn-sm"> <i class="fas fa-camera"></i> เปิดกล้อง</button>
+                    <button type="button" id="capture-btn" class="btn btn-primary btn-sm" style="display: none;"> <i class="fas fa-circle-check"></i> ถ่ายรูป</button>
+                    <button type="button" id="switch-camera-btn" class="btn btn-secondary btn-sm" style="display: none; margin-left: 5px;"> <i class="fas fa-sync-alt"></i> สลับกล้อง</button>
+                    </div>
+                <input type="hidden" name="facePhoto" id="facePhotoData" required>
+            </div>
 
-            <div class="mb-4">
-                <label class="form-label">ถ่ายรูปบัตรประชาชน</label>
-                <div id="id-card-camera-container" class="text-center bg-light p-2" style="border-radius: 10px; position: relative;">
-                    <video id="id-card-video" width="100%" height="auto" autoplay playsinline style="display: none;"></video>
-                    <canvas id="id-card-canvas" style="display:none;"></canvas>
-                    <img id="id-card-photo-preview" src="" alt="รูปบัตรประชาชนที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin-top: 10px;" />
-                    <div id="id-card-camera-placeholder">
-                        <i class="fas fa-id-card fa-3x text-muted"></i>
-                        <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูปบัตร</p>
-                    </div>
-                </div>
-                <div class="text-center mt-2">
-                    <button type="button" id="start-id-card-camera-btn" class="btn btn-info btn-sm"> <i class="fas fa-camera"></i> เปิดกล้องถ่ายบัตร</button>
-                    <button type="button" id="capture-id-card-btn" class="btn btn-primary btn-sm" style="display: none;"> <i class="fas fa-circle-check"></i> ถ่ายรูปบัตร</button>
-                </div>
-                <input type="hidden" name="idCardPhoto" id="idCardPhotoData" required>
-            </div>
-            <input type="hidden" name="userID" id="userID">
+            <div class="mb-4">
+                <label class="form-label">ถ่ายรูปบัตรประชาชน</label>
+                <div id="id-card-camera-container" class="text-center bg-light p-2" style="border-radius: 10px; position: relative;">
+                    <video id="id-card-video" width="100%" height="auto" autoplay playsinline style="display: none;"></video>
+                    <canvas id="id-card-canvas" style="display:none;"></canvas>
+                    <img id="id-card-photo-preview" src="" alt="รูปบัตรประชาชนที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin-top: 10px;" />
+                    <div id="id-card-camera-placeholder">
+                        <i class="fas fa-id-card fa-3x text-muted"></i>
+                        <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูปบัตร</p>
+                    </div>
+                </div>
+                <div class="text-center mt-2">
+                    <button type="button" id="start-id-card-camera-btn" class="btn btn-info btn-sm"> <i class="fas fa-camera"></i> เปิดกล้องถ่ายบัตร</button>
+                    <button type="button" id="capture-id-card-btn" class="btn btn-primary btn-sm" style="display: none;"> <i class="fas fa-circle-check"></i> ถ่ายรูปบัตร</button>
+                </div>
+                <input type="hidden" name="idCardPhoto" id="idCardPhotoData" required>
+            </div>
+            <input type="hidden" name="userID" id="userID">
 
-            <div class="form-group form-check mb-4">
-                <input type="checkbox" class="form-check-input" id="consentCheck" required>
-                <label class="form-check-label" for="consentCheck">
-                    ข้าพเจ้ายินยอมให้เก็บรวบรวมและใช้ข้อมูลส่วนบุคคล รวมถึงรูปถ่ายใบหน้าและบัตรประชาชน เพื่อวัตถุประสงค์ในการยืนยันตัวตนพนักงานและการยืนยันการเข้าพื้นที่
-                </label>
-            </div>
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-success fw-bold w-100" id="registerBtn">บันทึกข้อมูล</button>
-            </div>
-        </form>
-    </div>
+            <div class="form-group form-check mb-4">
+                <input type="checkbox" class="form-check-input" id="consentCheck" required>
+                <label class="form-check-label" for="consentCheck">
+                    ข้าพเจ้ายินยอมให้เก็บรวบรวมและใช้ข้อมูลส่วนบุคคล รวมถึงรูปถ่ายใบหน้าและบัตรประชาชน เพื่อวัตถุประสงค์ในการยืนยันตัวตนพนักงานและการยืนยันการเข้าพื้นที่
+                </label>
+            </div>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success fw-bold w-100" id="registerBtn">บันทึกข้อมูล</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    async function main() {
-        await liff.init({ liffId: "1654380017-ad8j2NgM" }); // ◀️ **สำคัญ:** ใส่ LIFF ID ของคุณที่นี่
-        if (!liff.isLoggedIn()) {
-            liff.login();
-        } else {
-            const profile = await liff.getProfile();
-            document.getElementById('userID').value = profile.userId;
-        }
-    }
-    main();
+    async function main() {
+        await liff.init({ liffId: "1654380017-ad8j2NgM" }); // ◀️ **สำคัญ:** ใส่ LIFF ID ของคุณที่นี่
+        if (!liff.isLoggedIn()) {
+            liff.login();
+        } else {
+            const profile = await liff.getProfile();
+            document.getElementById('userID').value = profile.userId;
+        }
+    }
+    main();
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzdXv0ASrsAByjeqF6FkORbGibV74RYHUpQCyFJoMpvA85LheSRNanb_4wS9_WX589x/exec'; // ◀️ **สำคัญ:** ใช้ URL ที่ได้จากการ Deploy ของคุณ
-    const form = document.forms['hello-sheet'];
-    
-    // --- Face Camera Elements ---
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const photoPreview = document.getElementById('photo-preview');
-    const startCameraBtn = document.getElementById('start-camera-btn');
-    const captureBtn = document.getElementById('capture-btn');
-    const facePhotoDataInput = document.getElementById('facePhotoData');
-    const cameraPlaceholder = document.getElementById('camera-placeholder');
-    const faceOverlay = document.getElementById('face-overlay');
-    const switchCameraBtn = document.getElementById('switch-camera-btn');
-    let stream = null;
-    let currentFacingMode = 'user';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzdXv0ASrsAByjeqF6FkORbGibV74RYHUpQCyFJoMpvA85LheSRNanb_4wS9_WX589x/exec'; // ◀️ **สำคัญ:** ใช้ URL ที่ได้จากการ Deploy ของคุณ
+    const form = document.forms['hello-sheet'];
+    
+    // --- Face Camera Elements ---
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const photoPreview = document.getElementById('photo-preview');
+    const startCameraBtn = document.getElementById('start-camera-btn');
+    const captureBtn = document.getElementById('capture-btn');
+    const facePhotoDataInput = document.getElementById('facePhotoData');
+    const cameraPlaceholder = document.getElementById('camera-placeholder');
+    const faceOverlay = document.getElementById('face-overlay');
+    const switchCameraBtn = document.getElementById('switch-camera-btn');
+    let stream = null;
+    let currentFacingMode = 'user';
 
-    // --- ID Card Camera Elements ---
-    const idCardVideo = document.getElementById('id-card-video');
-    const idCardCanvas = document.getElementById('id-card-canvas');
-    const idCardPhotoPreview = document.getElementById('id-card-photo-preview');
-    const startIdCardCameraBtn = document.getElementById('start-id-card-camera-btn');
-    const captureIdCardBtn = document.getElementById('capture-id-card-btn');
-    const idCardPhotoDataInput = document.getElementById('idCardPhotoData');
-    const idCardCameraPlaceholder = document.getElementById('id-card-camera-placeholder');
-    let idCardStream = null;
+    // --- ID Card Camera Elements ---
+    const idCardVideo = document.getElementById('id-card-video');
+    const idCardCanvas = document.getElementById('id-card-canvas');
+    const idCardPhotoPreview = document.getElementById('id-card-photo-preview');
+    const startIdCardCameraBtn = document.getElementById('start-id-card-camera-btn');
+    const captureIdCardBtn = document.getElementById('capture-id-card-btn');
+    const idCardPhotoDataInput = document.getElementById('idCardPhotoData');
+    const idCardCameraPlaceholder = document.getElementById('id-card-camera-placeholder');
+    let idCardStream = null;
 
-    // --- Face Camera Functions ---
-    function stopFaceCamera() {
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-            stream = null;
-        }
-    }
+    // --- Face Camera Functions ---
+    function stopFaceCamera() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+        }
+    }
 
-    async function initializeFaceCamera() {
-        stopFaceCamera();
-        const constraints = { video: { facingMode: currentFacingMode }, audio: false };
-        try {
-            stream = await navigator.mediaDevices.getUserMedia(constraints);
-            video.srcObject = stream;
-            video.style.display = 'block';
-            faceOverlay.style.display = 'block'; 
-            captureBtn.style.display = 'inline-block';
-            switchCameraBtn.style.display = 'inline-block';
-            startCameraBtn.style.display = 'none';
-            cameraPlaceholder.style.display = 'none';
-            photoPreview.style.display = 'none';
-        } catch (err) {
-            console.error("Error accessing face camera: ", err);
-            faceOverlay.style.display = 'none';
-            switchCameraBtn.style.display = 'none';
-            startCameraBtn.style.display = 'inline-block';
-            captureBtn.style.display = 'none';
-            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตในเบราว์เซอร์ของคุณ', 'error');
-        }
-    }
+    async function initializeFaceCamera() {
+        stopFaceCamera();
+        const constraints = { video: { facingMode: currentFacingMode }, audio: false };
+        try {
+            stream = await navigator.mediaDevices.getUserMedia(constraints);
+            video.srcObject = stream;
+            video.style.display = 'block';
+            faceOverlay.style.display = 'block'; 
+            captureBtn.style.display = 'inline-block';
+            switchCameraBtn.style.display = 'inline-block';
+            startCameraBtn.style.display = 'none';
+            cameraPlaceholder.style.display = 'none';
+            photoPreview.style.display = 'none';
+        } catch (err) {
+            console.error("Error accessing face camera: ", err);
+            faceOverlay.style.display = 'none';
+            switchCameraBtn.style.display = 'none';
+            startCameraBtn.style.display = 'inline-block';
+            captureBtn.style.display = 'none';
+            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตในเบราว์เซอร์ของคุณ', 'error');
+        }
+    }
 
-    startCameraBtn.addEventListener('click', () => {
-        // document.getElementById('camera-container').scrollIntoView({ behavior: 'smooth', block: 'start' }); 
-        currentFacingMode = 'user';
-        initializeFaceCamera();
-    });
+    startCameraBtn.addEventListener('click', () => {
+        currentFacingMode = 'user';
+        initializeFaceCamera();
+    });
 
-    switchCameraBtn.addEventListener('click', () => {
-        currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-        initializeFaceCamera();
-    });
+    switchCameraBtn.addEventListener('click', () => {
+        currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+        initializeFaceCamera();
+    });
 
-    captureBtn.addEventListener('click', () => {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataURL = canvas.toDataURL('image/jpeg');
-        photoPreview.src = dataURL;
-        facePhotoDataInput.value = dataURL;
-        
-        stopFaceCamera();
-        
-        video.style.display = 'none';
-        faceOverlay.style.display = 'none';
-        photoPreview.style.display = 'block';
-        captureBtn.style.display = 'none';
-        switchCameraBtn.style.display = 'none';
-        startCameraBtn.style.display = 'inline-block';
-        startCameraBtn.innerHTML = '<i class="fas fa-sync-alt"></i> ถ่ายรูปใหม่';
-    });
+    captureBtn.addEventListener('click', () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL('image/jpeg');
+        photoPreview.src = dataURL;
+        facePhotoDataInput.value = dataURL;
+        
+        stopFaceCamera();
+        
+        video.style.display = 'none';
+        faceOverlay.style.display = 'none';
+        photoPreview.style.display = 'block';
+        captureBtn.style.display = 'none';
+        switchCameraBtn.style.display = 'none';
+        startCameraBtn.style.display = 'inline-block';
+        startCameraBtn.innerHTML = '<i class="fas fa-sync-alt"></i> ถ่ายรูปใหม่';
+    });
 
-    // --- ID Card Camera Functions ---
-    function stopIdCardCamera() {
-        if (idCardStream) {
-            idCardStream.getTracks().forEach(track => track.stop());
-            idCardStream = null;
-        }
-    }
+    // --- ID Card Camera Functions ---
+    function stopIdCardCamera() {
+        if (idCardStream) {
+            idCardStream.getTracks().forEach(track => track.stop());
+            idCardStream = null;
+        }
+    }
 
-    async function initializeIdCardCamera() {
-        stopIdCardCamera();
-        // บังคับใช้กล้องหลัง 'environment' เสมอ
-        const constraints = { video: { facingMode: 'environment' }, audio: false };
-        try {
-            idCardStream = await navigator.mediaDevices.getUserMedia(constraints);
-            idCardVideo.srcObject = idCardStream;
-            idCardVideo.style.display = 'block';
-            captureIdCardBtn.style.display = 'inline-block';
-            startIdCardCameraBtn.style.display = 'none';
-            idCardCameraPlaceholder.style.display = 'none';
-            idCardPhotoPreview.style.display = 'none';
-        } catch (err) {
-            console.error("Error accessing ID card camera: ", err);
-            startIdCardCameraBtn.style.display = 'inline-block';
-            captureIdCardBtn.style.display = 'none';
-            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเข้าถึงกล้องหลังได้ กรุณาตรวจสอบการอนุญาตในเบราว์เซอร์ของคุณ', 'error');
-        }
-    }
+    async function initializeIdCardCamera() {
+        stopIdCardCamera();
+        // บังคับใช้กล้องหลัง 'environment' เสมอ
+        const constraints = { video: { facingMode: 'environment' }, audio: false };
+        try {
+            idCardStream = await navigator.mediaDevices.getUserMedia(constraints);
+            idCardVideo.srcObject = idCardStream;
+            idCardVideo.style.display = 'block';
+            captureIdCardBtn.style.display = 'inline-block';
+            startIdCardCameraBtn.style.display = 'none';
+            idCardCameraPlaceholder.style.display = 'none';
+            idCardPhotoPreview.style.display = 'none';
+        } catch (err) {
+            console.error("Error accessing ID card camera: ", err);
+            startIdCardCameraBtn.style.display = 'inline-block';
+            captureIdCardBtn.style.display = 'none';
+            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเข้าถึงกล้องหลังได้ กรุณาตรวจสอบการอนุญาตในเบราว์เซอร์ของคุณ', 'error');
+        }
+    }
 
-    startIdCardCameraBtn.addEventListener('click', () => {
-        // document.getElementById('id-card-camera-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        initializeIdCardCamera();
-    });
+    startIdCardCameraBtn.addEventListener('click', () => {
+        initializeIdCardCamera();
+    });
 
-    captureIdCardBtn.addEventListener('click', () => {
-        idCardCanvas.width = idCardVideo.videoWidth;
-        idCardCanvas.height = idCardVideo.videoHeight;
-        idCardCanvas.getContext('2d').drawImage(idCardVideo, 0, 0, idCardCanvas.width, idCardCanvas.height);
-        const dataURL = idCardCanvas.toDataURL('image/jpeg');
-        idCardPhotoPreview.src = dataURL;
-        idCardPhotoDataInput.value = dataURL;
-        
-        stopIdCardCamera();
-        
-        idCardVideo.style.display = 'none';
-        idCardPhotoPreview.style.display = 'block';
-        captureIdCardBtn.style.display = 'none';
-        startIdCardCameraBtn.style.display = 'inline-block';
-        startIdCardCameraBtn.innerHTML = '<i class="fas fa-sync-alt"></i> ถ่ายบัตรใหม่';
-    });
+    captureIdCardBtn.addEventListener('click', () => {
+        idCardCanvas.width = idCardVideo.videoWidth;
+        idCardCanvas.height = idCardVideo.videoHeight;
+        idCardCanvas.getContext('2d').drawImage(idCardVideo, 0, 0, idCardCanvas.width, idCardCanvas.height);
+        const dataURL = idCardCanvas.toDataURL('image/jpeg');
+        idCardPhotoPreview.src = dataURL;
+        idCardPhotoDataInput.value = dataURL;
+        
+        stopIdCardCamera();
+        
+        idCardVideo.style.display = 'none';
+        idCardPhotoPreview.style.display = 'block';
+        captureIdCardBtn.style.display = 'none';
+        startIdCardCameraBtn.style.display = 'inline-block';
+        startIdCardCameraBtn.innerHTML = '<i class="fas fa-sync-alt"></i> ถ่ายบัตรใหม่';
+    });
 
-    // --- Form Submission ---
-    form.addEventListener('submit', async e => {
-        e.preventDefault();
+    // --- Form Submission ---
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
 
-        // ตรวจสอบว่ากรอกข้อมูลครบถ้วนหรือไม่ (รวมถึงรูปถ่ายทั้ง 2)
-        if (!form.checkValidity() || !facePhotoDataInput.value || !idCardPhotoDataInput.value) {
-            Swal.fire('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูล, ถ่ายรูปใบหน้า, ถ่ายรูปบัตรประชาชน และกดยินยอมให้ครบถ้วน', 'warning');
-            return;
-        }
+        // ตรวจสอบว่ากรอกข้อมูลครบถ้วนหรือไม่ (รวมถึงรูปถ่ายทั้ง 2)
+        if (!form.checkValidity() || !facePhotoDataInput.value || !idCardPhotoDataInput.value) {
+            Swal.fire('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูล, ถ่ายรูปใบหน้า, ถ่ายรูปบัตรประชาชน และกดยินยอมให้ครบถ้วน', 'warning');
+            return;
+        }
 
-        Swal.fire({
-            title: 'กำลังตรวจสอบและบันทึกข้อมูล...',
-            text: 'กรุณารอสักครู่ ระบบกำลังอัปโหลดไฟล์',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
-        });
-        
-        try {
-            const facePhotoBase64 = facePhotoDataInput.value;
-            const idCardPhotoBase64 = idCardPhotoDataInput.value;
+        Swal.fire({
+            title: 'กำลังตรวจสอบและบันทึกข้อมูล...',
+            text: 'กรุณารอสักครู่ ระบบกำลังอัปโหลดไฟล์',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+        
+        try {
+            const facePhotoBase64 = facePhotoDataInput.value;
+            const idCardPhotoBase64 = idCardPhotoDataInput.value;
 
-            const formData = new FormData(form);
-            const dataObject = {};
-            formData.forEach((value, key) => {
-                dataObject[key] = value;
-            });
-            
-            dataObject.action = 'register';
-            // ข้อมูลรูปภาพได้ถูกกำหนดค่าผ่าน hidden input แล้ว (name="facePhoto" และ name="idCardPhoto")
-            // จึงไม่จำเป็นต้องกำหนดค่า dataObject.facePhoto และ dataObject.idCardPhoto ซ้ำ
-            dataObject.Consent = document.getElementById('consentCheck').checked ? 'ยินยอม' : 'ไม่ยินยอม';
+            const formData = new FormData(form);
+            const dataObject = {};
+            formData.forEach((value, key) => {
+                dataObject[key] = value;
+            });
+            
+            dataObject.action = 'register';
+            // ข้อมูลรูปภาพได้ถูกกำหนดค่าผ่าน hidden input แล้ว (name="facePhoto" และ name="idCardPhoto")
+            // จึงไม่จำเป็นต้องกำหนดค่า dataObject.facePhoto และ dataObject.idCardPhoto ซ้ำ
+            dataObject.Consent = document.getElementById('consentCheck').checked ? 'ยินยอม' : 'ไม่ยินยอม';
 
-            const response = await fetch(scriptURL, {
-                method: 'POST',
-                // เปลี่ยนเป็น mode: 'cors' และ body: JSON.stringify() เพื่อให้ Google Apps Script จัดการได้ง่าย
-                mode: 'no-cors', // หาก GAS ของคุณรองรับ CORS ให้เปลี่ยนเป็น 'cors'
-                cache: 'no-cache',
-                headers: { 'Content-Type': 'application/json' }, // Header นี้อาจไม่ทำงานใน mode: 'no-cors'
-                body: JSON.stringify(dataObject),
-                redirect: 'follow'
-            });
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                // เปลี่ยนเป็น mode: 'cors' และ body: JSON.stringify() เพื่อให้ Google Apps Script จัดการได้ง่าย
+                mode: 'no-cors', // หาก GAS ของคุณรองรับ CORS ให้เปลี่ยนเป็น 'cors'
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' }, // Header นี้อาจไม่ทำงานใน mode: 'no-cors'
+                body: JSON.stringify(dataObject),
+                redirect: 'follow'
+            });
 
-             Swal.fire({
-                 position: 'center', icon: 'success', title: 'ส่งข้อมูลสำเร็จ!',
-                 text: 'ข้อมูลของคุณถูกส่งเข้าระบบเรียบร้อยแล้ว กำลังรอการตรวจสอบ', showConfirmButton: false, timer: 3000
-             }).then(() => {
-                 if (liff.isInClient()) {
-                      liff.closeWindow();
-                 } else {
-                      window.location.reload();
-                 }
-             });
+             Swal.fire({
+                 position: 'center', icon: 'success', title: 'ส่งข้อมูลสำเร็จ!',
+                 text: 'ข้อมูลของคุณถูกส่งเข้าระบบเรียบร้อยแล้ว กำลังรอการตรวจสอบ', showConfirmButton: false, timer: 3000
+             }).then(() => {
+                 if (liff.isInClient()) {
+                      liff.closeWindow();
+                 } else {
+                      window.location.reload();
+                 }
+             });
 
-        } catch (error) {
-             console.error('Error!', error.message);
-             Swal.fire('เกิดข้อผิดพลาด!', 'ไม่สามารถบันทึกข้อมูลได้: ' + error.message, 'error');
-        }
-    });
+        } catch (error) {
+             console.error('Error!', error.message);
+             Swal.fire('เกิดข้อผิดพลาด!', 'ไม่สามารถบันทึกข้อมูลได้: ' + error.message, 'error');
+        }
+    });
 </script>
 
 </body>
