@@ -134,8 +134,6 @@
     const facePhotoDataInput = document.getElementById('facePhotoData');
     const cameraPlaceholder = document.getElementById('camera-placeholder');
     const faceOverlay = document.getElementById('face-overlay');
-    
-    // ========== START: MODIFIED/NEW CODE ==========
     const switchCameraBtn = document.getElementById('switch-camera-btn');
     let stream = null;
     let currentFacingMode = 'user'; // 'user' = กล้องหน้า, 'environment' = กล้องหลัง
@@ -154,7 +152,7 @@
         const constraints = {
             video: { 
                 facingMode: currentFacingMode,
-                zoom: 1.0 // <<< ตั้งค่าซูมเริ่มต้นเป็น 1x (ปกติ)
+                zoom: 1.0 // <<< ตั้งค่าซูมเริ่มต้นเป็น 1x (ปกติ) สำหรับกล้องที่ใช้งานอยู่
             },
             audio: false
         };
@@ -192,7 +190,6 @@
         currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
         initializeCamera(); // เริ่มกล้องใหม่ด้วยโหมดที่สลับแล้ว
     });
-    // ========== END: MODIFIED/NEW CODE ==========
 
     captureBtn.addEventListener('click', () => {
         canvas.width = video.videoWidth;
@@ -204,7 +201,6 @@
         photoPreview.src = dataURL;
         facePhotoDataInput.value = dataURL;
         
-        // ========== START: MODIFIED CODE ==========
         stopCamera(); // หยุดกล้องหลังถ่ายเสร็จ
         
         // อัปเดต UI หลังถ่ายรูป
@@ -215,7 +211,6 @@
         switchCameraBtn.style.display = 'none'; // ซ่อนปุ่มสลับกล้อง
         startCameraBtn.style.display = 'inline-block';
         startCameraBtn.innerText = 'ถ่ายรูปใหม่';
-        // ========== END: MODIFIED CODE ==========
     });
 
     document.getElementById('idCardPhoto').addEventListener('change', function(e) {
