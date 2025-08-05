@@ -74,8 +74,8 @@
 
                     <img id="photo-preview" src="" alt="รูปที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin-top: 10px;" />
                      <div id="camera-placeholder">
-                          <i class="fas fa-camera fa-3x text-muted"></i>
-                          <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูป</p>
+                         <i class="fas fa-camera fa-3x text-muted"></i>
+                         <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูป</p>
                      </div>
                 </div>
                 <div class="text-center mt-2">
@@ -152,7 +152,10 @@
     async function initializeCamera() {
         stopCamera(); // หยุดกล้องเก่าก่อน (ถ้ามี)
         const constraints = {
-            video: { facingMode: currentFacingMode },
+            video: { 
+                facingMode: currentFacingMode,
+                zoom: 1.0 // <<< ตั้งค่าซูมเริ่มต้นเป็น 1x (ปกติ)
+            },
             audio: false
         };
         try {
@@ -278,14 +281,14 @@
             });
 
              Swal.fire({
-                  position: 'center', icon: 'success', title: 'ส่งข้อมูลสำเร็จ!',
-                  text: 'ข้อมูลของคุณถูกส่งเข้าระบบเรียบร้อยแล้ว กำลังรอการตรวจสอบ', showConfirmButton: false, timer: 3000
+                 position: 'center', icon: 'success', title: 'ส่งข้อมูลสำเร็จ!',
+                 text: 'ข้อมูลของคุณถูกส่งเข้าระบบเรียบร้อยแล้ว กำลังรอการตรวจสอบ', showConfirmButton: false, timer: 3000
              }).then(() => {
-                  if (liff.isInClient()) {
+                 if (liff.isInClient()) {
                          liff.closeWindow();
-                  } else {
+                 } else {
                          window.location.reload();
-                  }
+                 }
              });
 
         } catch (error) {
