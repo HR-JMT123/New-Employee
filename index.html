@@ -149,10 +149,15 @@
     // ฟังก์ชันสำหรับเริ่มสตรีมกล้อง
     async function initializeCamera() {
         stopCamera(); // หยุดกล้องเก่าก่อน (ถ้ามี)
+
+        // กำหนดค่าซูมตามกล้องที่เลือก
+        // ถ้าเป็นกล้องหน้า (user) ให้ซูม 1x, ถ้าเป็นกล้องหลัง (environment) ให้ซูม 2x
+        const zoomLevel = currentFacingMode === 'user' ? 1.0 : 2.0;
+
         const constraints = {
             video: { 
                 facingMode: currentFacingMode,
-                zoom: 1.0 // <<< ตั้งค่าซูมเริ่มต้นเป็น 1x (ปกติ) สำหรับกล้องที่ใช้งานอยู่
+                zoom: zoomLevel // ใช้ตัวแปร zoomLevel ที่กำหนดตามเงื่อนไข
             },
             audio: false
         };
