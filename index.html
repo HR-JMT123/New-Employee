@@ -1,3 +1,115 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR-JMT</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-image: url('https://img2.pic.in.th/pic/Cover808900978ea91797.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; }
+        .register-card { background-color: rgba(255, 255, 255, 0.98); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border: none; display: flex; flex-direction: row; max-width: 900px; width: 100%; }
+        .register-image-side { background: url('https://img2.pic.in.th/pic/Gemini_Generated_Image_rqnmqyrqnmqyrqnm.png') center/cover; width: 45%; }
+        .register-form-side { width: 55%; padding: 3rem; }
+        .card-title { font-weight: 700; color: #333; margin-bottom: 0.5rem; font-size: 1.75rem; }
+        .card-subtitle { color: #6c757d; margin-bottom: 2rem; font-size: 1.1rem; }
+        .form-label { font-weight: 500; color: #495057; }
+        .input-group-text { background-color: transparent; border-right: none; color: #343a40; font-size: 1.1rem; }
+        .form-control { border-left: none; border-radius: 0 0.25rem 0.25rem 0; padding-left: 0; transition: all 0.3s ease; font-size: 1rem; }
+        .form-control:focus { box-shadow: none; border-color: #555; }
+        .btn-success { background: linear-gradient(45deg, #1E8449, #28B463); border: none; border-radius: 50px; padding: 12px 30px; font-weight: 700; font-size: 1rem; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(30, 132, 73, 0.3); }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(30, 132, 73, 0.4); }
+        .custom-file-input ~ .custom-file-label::after { content: "เลือกไฟล์"; }
+        .file-preview { margin-top: 10px; font-style: italic; color: #28a745; display: none; }
+        #camera-container video, #camera-container img { border: 2px solid #eee; border-radius: 10px; }
+        .form-check-label { font-size: 0.9rem; }
+        @media (max-width: 768px) {
+            .register-image-side { display: none; }
+            .register-form-side { width: 100%; padding: 2rem; }
+            .register-card { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-card">
+    <div class="register-image-side"></div>
+    <div class="register-form-side">
+        <div class="text-center mb-4">
+            <img src="https://img5.pic.in.th/file/secure-sv1/-1920-x-300-px.png" alt="Company Logo" style="max-width: 250px; margin-bottom: 1.5rem;">
+            <h3 class="card-title">ยืนยันตัวตนพนักงาน</h3>
+            <p class="card-subtitle">กรุณากรอกข้อมูลให้ถูกต้อง!</p>
+        </div>
+
+        <form method="post" autocomplete="off" name="hello-sheet" id="registerForm">
+            <div class="mb-3">
+                <label for="fullName" class="form-label">Full Name</label>
+                <div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="fa-solid fa-user"></i></span></div><input type="text" class="form-control" id="fullName" placeholder="ชื่อ-สกุล" name="ชื่อ-สกุล" required></div>
+            </div>
+            <div class="mb-3">
+                <label for="IdEmployee" class="form-label">Employee ID</label>
+                <div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="fa-solid fa-id-card-clip"></i></span></div><input type="text" class="form-control" id="IdEmployee" placeholder="รหัสพนักงาน" name="รหัสพนักงาน" required></div>
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="fa-solid fa-phone"></i></span></div><input type="tel" class="form-control" id="phone" placeholder="เบอร์โทรศัพท์" name="เบอร์โทร" required></div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">สแกนใบหน้า (ถ่ายรูป)</label>
+                <div id="camera-container" class="text-center bg-light p-2" style="border-radius: 10px; position: relative;">
+                    <video id="video" width="100%" height="auto" autoplay playsinline style="display: none;"></video>
+                    <canvas id="canvas" style="display:none;"></canvas>
+
+                    <img id="face-overlay" 
+                         src="https://img2.pic.in.th/pic/-9fbd25e4342ef1a57.png" 
+                         alt="ตัวอย่างกรอบใบหน้า" 
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none; pointer-events: none; border: none; opacity: 0.7;">
+
+                    <img id="photo-preview" src="" alt="รูปที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin-top: 10px;" />
+                     <div id="camera-placeholder">
+                          <i class="fas fa-camera fa-3x text-muted"></i>
+                          <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูป</p>
+                     </div>
+                </div>
+                <div class="text-center mt-2">
+                    <button type="button" id="start-camera-btn" class="btn btn-info btn-sm"> <i class="fas fa-camera"></i> เปิดกล้อง</button>
+                    <button type="button" id="capture-btn" class="btn btn-primary btn-sm" style="display: none;"> <i class="fas fa-circle-check"></i> ถ่ายรูป</button>
+                    <button type="button" id="switch-camera-btn" class="btn btn-secondary btn-sm" style="display: none; margin-left: 5px;"> <i class="fas fa-sync-alt"></i> สลับกล้อง</button>
+                    </div>
+                <input type="hidden" id="facePhotoData" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="idCardPhoto" class="form-label">แนบรูปบัตรประชาชน</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="idCardPhoto" accept="image/*" required>
+                    <label class="custom-file-label" for="idCardPhoto">เลือกรูปบัตรประชาชน...</label>
+                </div>
+                 <div class="file-preview" id="idCardPhotoPreview"></div>
+            </div>
+            
+            <input type="hidden" name="userID" id="userID">
+
+            <div class="form-group form-check mb-4">
+                <input type="checkbox" class="form-check-input" id="consentCheck" required>
+                <label class="form-check-label" for="consentCheck">
+                    ข้าพเจ้ายินยอมให้เก็บรวบรวมและใช้ข้อมูลส่วนบุคคล รวมถึงรูปถ่ายใบหน้าและบัตรประชาชน เพื่อวัตถุประสงค์ในการยืนยันตัวตนพนักงานและการยืนยันการเข้าพื้นที่
+                </label>
+            </div>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success fw-bold w-100" id="registerBtn">บันทึกข้อมูล</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     async function main() {
@@ -14,57 +126,46 @@
     const scriptURL = 'https://script.google.com/macros/s/AKfycbz-oVVVdJM03S-QxFwAVjf-Zj-xrb464P5YPauUqIa-DE-uc2NB7dL6pGXBsHqlnQve/exec'; // ◀️ **สำคัญ:** ใช้ URL ที่ได้จากการ Deploy ของคุณ
     const form = document.forms['hello-sheet'];
     
-    // Element References
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const photoPreview = document.getElementById('photo-preview');
     const startCameraBtn = document.getElementById('start-camera-btn');
     const captureBtn = document.getElementById('capture-btn');
-    const switchCameraBtn = document.getElementById('switch-camera-btn');
     const facePhotoDataInput = document.getElementById('facePhotoData');
     const cameraPlaceholder = document.getElementById('camera-placeholder');
     const faceOverlay = document.getElementById('face-overlay');
-    
-    // Camera State
-    let currentStream = null;
-    let currentFacingMode = 'user'; // 'user' = front camera, 'environment' = back camera
+    const switchCameraBtn = document.getElementById('switch-camera-btn');
+    let stream = null;
+    let currentFacingMode = 'user'; // 'user' = กล้องหน้า, 'environment' = กล้องหลัง
 
-    /**
-     * Stops the currently active camera stream.
-     * This is necessary to release the camera hardware so it can be used again.
-     */
+    // ฟังก์ชันสำหรับหยุดสตรีมกล้อง
     function stopCamera() {
-        if (currentStream) {
-            currentStream.getTracks().forEach(track => track.stop());
-            currentStream = null;
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
         }
     }
 
-    /**
-     * Initializes and starts the camera. It will request permission from the user
-     * only on the first call. Subsequent calls (like switching cameras) will reuse the permission.
-     */
-    async function startCamera() {
-        // Stop any existing stream before starting a new one.
-        stopCamera();
+    // ฟังก์ชันสำหรับเริ่มสตรีมกล้อง
+    async function initializeCamera() {
+        stopCamera(); // หยุดกล้องเก่าก่อน (ถ้ามี)
 
-        // Define constraints for the camera.
         const constraints = {
             video: { 
                 facingMode: currentFacingMode,
-                // You can add other constraints like zoom here if needed.
-                // For example, some browsers support zoom on the back camera.
-                // zoom: currentFacingMode === 'environment' ? 2.0 : 1.0
+                // ไม่จำเป็นต้องกำหนดค่า zoom ที่นี่ เว้นแต่ต้องการจริงๆ
+                // zoom: 1.0 
             },
             audio: false
         };
-
         try {
-            // Request camera access. The browser will ask for permission here ONCE per session.
-            currentStream = await navigator.mediaDevices.getUserMedia(constraints);
-            video.srcObject = currentStream;
+            // ---> จุดสำคัญ <---
+            // บรรทัดนี้จะขออนุญาตผู้ใช้ในครั้งแรกเท่านั้น
+            // หากผู้ใช้เคย "อนุญาต" ไปแล้ว เบราว์เซอร์จะเปิดกล้องให้ทันทีโดยไม่ถามซ้ำ
+            stream = await navigator.mediaDevices.getUserMedia(constraints);
+            video.srcObject = stream;
             
-            // Update UI to show the camera feed and relevant buttons
+            // อัปเดต UI เมื่อกล้องเปิดสำเร็จ
             video.style.display = 'block';
             faceOverlay.style.display = 'block'; 
             captureBtn.style.display = 'inline-block';
@@ -75,32 +176,27 @@
 
         } catch (err) {
             console.error("Error accessing camera: ", err);
-            // Reset UI if camera access fails
+            // หากผู้ใช้เคย "บล็อก" การเข้าถึงกล้องไว้ก่อนหน้า โค้ดจะทำงานในส่วนนี้ทันที
             faceOverlay.style.display = 'none';
             switchCameraBtn.style.display = 'none';
             startCameraBtn.style.display = 'inline-block';
             captureBtn.style.display = 'none';
-            cameraPlaceholder.style.display = 'block';
-            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตใน Browser ของคุณ', 'error');
+            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตในเบราว์เซอร์ของคุณ', 'error');
         }
     }
 
-    // Event listener for the "Open Camera" / "Retake Photo" button
     startCameraBtn.addEventListener('click', () => {
-        // Always start with the front camera for consistency when starting fresh.
+        // เมื่อกด "เปิดกล้อง" หรือ "ถ่ายใหม่" จะเริ่มด้วยกล้องหน้าเสมอ
         currentFacingMode = 'user';
-        startCamera();
+        initializeCamera();
     });
 
-    // Event listener for the "Switch Camera" button
     switchCameraBtn.addEventListener('click', () => {
-        // Toggle between front and back camera
+        // สลับโหมดกล้อง
         currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-        // Restart the camera with the new mode. Permission is already granted.
-        startCamera();
+        initializeCamera(); // เริ่มกล้องใหม่ด้วยโหมดที่สลับแล้ว (จะไม่ขออนุญาตซ้ำ)
     });
 
-    // Event listener for the "Capture" button
     captureBtn.addEventListener('click', () => {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
@@ -111,49 +207,44 @@
         photoPreview.src = dataURL;
         facePhotoDataInput.value = dataURL;
         
-        // Stop the camera stream after taking the picture
-        stopCamera(); 
+        stopCamera(); // หยุดกล้องหลังถ่ายเสร็จ
         
-        // Update UI to show the preview and "Retake" button
+        // อัปเดต UI หลังถ่ายรูป
         video.style.display = 'none';
         faceOverlay.style.display = 'none';
         photoPreview.style.display = 'block';
         captureBtn.style.display = 'none';
-        switchCameraBtn.style.display = 'none';
+        switchCameraBtn.style.display = 'none'; // ซ่อนปุ่มสลับกล้อง
         startCameraBtn.style.display = 'inline-block';
-        startCameraBtn.innerHTML = '<i class="fas fa-camera"></i> ถ่ายรูปใหม่'; // Change text to "Retake Photo"
+        startCameraBtn.innerHTML = '<i class="fas fa-sync-alt"></i> ถ่ายรูปใหม่'; // เปลี่ยนข้อความปุ่ม
     });
 
-    // Event listener for the ID card file input
     document.getElementById('idCardPhoto').addEventListener('change', function(e) {
-        const file = e.target.files[0];
+        const fileName = e.target.files[0] ? e.target.files[0].name : 'เลือกไฟล์...';
         const label = this.nextElementSibling;
+        label.innerText = fileName;
+        
         const preview = document.getElementById('idCardPhotoPreview');
-
-        if (file) {
-            label.innerText = file.name;
-            preview.innerText = `✔️ เลือกไฟล์: ${file.name}`;
+        if (e.target.files[0]) {
+            preview.innerText = `✔️ เลือกไฟล์: ${fileName}`;
             preview.style.display = 'block';
         } else {
-            label.innerText = 'เลือกรูปบัตรประชาชน...';
             preview.style.display = 'none';
         }
     });
 
-    // Form submission handler
     form.addEventListener('submit', async e => {
         e.preventDefault();
 
         const idCardPhotoInput = document.getElementById('idCardPhoto');
 
-        // Validate all required fields
         if (!form.checkValidity() || !facePhotoDataInput.value || idCardPhotoInput.files.length === 0) {
             Swal.fire('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูล, ถ่ายรูปใบหน้า, แนบไฟล์บัตรประชาชน และกดยินยอมให้ครบถ้วน', 'warning');
             return;
         }
 
         Swal.fire({
-            title: 'กำลังบันทึกข้อมูล...',
+            title: 'กำลังตรวจสอบและบันทึกข้อมูล...',
             text: 'กรุณารอสักครู่ ระบบกำลังอัปโหลดไฟล์',
             allowOutsideClick: false,
             didOpen: () => { Swal.showLoading(); }
@@ -172,18 +263,18 @@
 
             const formData = new FormData(form);
             const dataObject = {};
-            formData.forEach((value, key) => { dataObject[key] = value; });
+            formData.forEach((value, key) => {
+                dataObject[key] = value;
+            });
             
             dataObject.action = 'register';
             dataObject.facePhoto = facePhotoBase64;
             dataObject.idCardPhoto = idCardPhotoBase64;
             dataObject.Consent = document.getElementById('consentCheck').checked ? 'ยินยอม' : 'ไม่ยินยอม';
 
-            // Using 'no-cors' mode means you won't get a response back in the script,
-            // but the request will be sent to the server. This is typical for Google Apps Script web apps.
-            await fetch(scriptURL, {
+            const response = await fetch(scriptURL, {
                 method: 'POST',
-                mode: 'no-cors', 
+                mode: 'no-cors', // no-cors mode is for simple requests, response will be opaque
                 cache: 'no-cache',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataObject),
@@ -195,9 +286,9 @@
                  text: 'ข้อมูลของคุณถูกส่งเข้าระบบเรียบร้อยแล้ว กำลังรอการตรวจสอบ', showConfirmButton: false, timer: 3000
              }).then(() => {
                  if (liff.isInClient()) {
-                     liff.closeWindow();
+                      liff.closeWindow();
                  } else {
-                     window.location.reload();
+                      window.location.reload();
                  }
              });
 
@@ -207,3 +298,6 @@
         }
     });
 </script>
+
+</body>
+</html>
