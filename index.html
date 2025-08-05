@@ -81,7 +81,8 @@
                 <div class="text-center mt-2">
                     <button type="button" id="start-camera-btn" class="btn btn-info btn-sm"> <i class="fas fa-camera"></i> เปิดกล้อง</button>
                     <button type="button" id="capture-btn" class="btn btn-primary btn-sm" style="display: none;"> <i class="fas fa-circle-check"></i> ถ่ายรูป</button>
-                </div>
+                    <button type="button" id="switch-camera-btn" class="btn btn-secondary btn-sm" style="display: none; margin-left: 5px;"> <i class="fas fa-sync-alt"></i> สลับกล้อง</button>
+                    </div>
                 <input type="hidden" id="facePhotoData" required>
             </div>
 
@@ -133,24 +134,62 @@
     const facePhotoDataInput = document.getElementById('facePhotoData');
     const cameraPlaceholder = document.getElementById('camera-placeholder');
     const faceOverlay = document.getElementById('face-overlay');
+    
+    // ========== START: MODIFIED/NEW CODE ==========
+    const switchCameraBtn = document.getElementById('switch-camera-btn');
     let stream = null;
+    let currentFacingMode = 'user'; // 'user' = กล้องหน้า, 'environment' = กล้องหลัง
 
-    startCameraBtn.addEventListener('click', async () => {
+    // ฟังก์ชันสำหรับหยุดสตรีมกล้อง
+    function stopCamera() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+        }
+    }
+
+    // ฟังก์ชันสำหรับเริ่มสตรีมกล้อง
+    async function initializeCamera() {
+        stopCamera(); // หยุดกล้องเก่าก่อน (ถ้ามี)
+        const constraints = {
+            video: { facingMode: currentFacingMode },
+            audio: false
+        };
         try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+            stream = await navigator.mediaDevices.getUserMedia(constraints);
             video.srcObject = stream;
+            
+            // อัปเดต UI เมื่อกล้องเปิดสำเร็จ
             video.style.display = 'block';
             faceOverlay.style.display = 'block'; 
             captureBtn.style.display = 'inline-block';
+            switchCameraBtn.style.display = 'inline-block';
             startCameraBtn.style.display = 'none';
             cameraPlaceholder.style.display = 'none';
             photoPreview.style.display = 'none';
+
         } catch (err) {
             console.error("Error accessing camera: ", err);
             faceOverlay.style.display = 'none';
-            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาต', 'error');
+            switchCameraBtn.style.display = 'none';
+            startCameraBtn.style.display = 'inline-block'; // แสดงปุ่มเปิดกล้องอีกครั้งหากล้มเหลว
+            captureBtn.style.display = 'none';
+            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาต หรือลองสลับกล้อง', 'error');
         }
+    }
+
+    startCameraBtn.addEventListener('click', () => {
+        // เมื่อกด "เปิดกล้อง" หรือ "ถ่ายใหม่" ให้เริ่มด้วยกล้องหน้าเสมอ
+        currentFacingMode = 'user';
+        initializeCamera();
     });
+
+    switchCameraBtn.addEventListener('click', () => {
+        // สลับโหมดกล้อง
+        currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+        initializeCamera(); // เริ่มกล้องใหม่ด้วยโหมดที่สลับแล้ว
+    });
+    // ========== END: MODIFIED/NEW CODE ==========
 
     captureBtn.addEventListener('click', () => {
         canvas.width = video.videoWidth;
@@ -162,13 +201,18 @@
         photoPreview.src = dataURL;
         facePhotoDataInput.value = dataURL;
         
-        stream.getTracks().forEach(track => track.stop());
+        // ========== START: MODIFIED CODE ==========
+        stopCamera(); // หยุดกล้องหลังถ่ายเสร็จ
+        
+        // อัปเดต UI หลังถ่ายรูป
         video.style.display = 'none';
         faceOverlay.style.display = 'none';
         photoPreview.style.display = 'block';
         captureBtn.style.display = 'none';
+        switchCameraBtn.style.display = 'none'; // ซ่อนปุ่มสลับกล้อง
         startCameraBtn.style.display = 'inline-block';
         startCameraBtn.innerText = 'ถ่ายรูปใหม่';
+        // ========== END: MODIFIED CODE ==========
     });
 
     document.getElementById('idCardPhoto').addEventListener('change', function(e) {
@@ -190,7 +234,6 @@
 
         const idCardPhotoInput = document.getElementById('idCardPhoto');
 
-        // การตรวจสอบ checkValidity() จะตรวจสอบ checkbox ที่มี attribute 'required' โดยอัตโนมัติ
         if (!form.checkValidity() || !facePhotoDataInput.value || idCardPhotoInput.files.length === 0) {
             Swal.fire('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูล, ถ่ายรูปใบหน้า, แนบไฟล์บัตรประชาชน และกดยินยอมให้ครบถ้วน', 'warning');
             return;
@@ -223,11 +266,7 @@
             dataObject.action = 'register';
             dataObject.facePhoto = facePhotoBase64;
             dataObject.idCardPhoto = idCardPhotoBase64;
-
-            // ========== START: ADDED CONSENT VALUE ==========
-            // เพิ่มข้อมูลการยินยอมเข้าไปใน object ที่จะส่งไป
             dataObject.Consent = document.getElementById('consentCheck').checked ? 'ยินยอม' : 'ไม่ยินยอม';
-            // ========== END: ADDED CONSENT VALUE ==========
 
             const response = await fetch(scriptURL, {
                 method: 'POST',
@@ -243,9 +282,9 @@
                   text: 'ข้อมูลของคุณถูกส่งเข้าระบบเรียบร้อยแล้ว กำลังรอการตรวจสอบ', showConfirmButton: false, timer: 3000
              }).then(() => {
                   if (liff.isInClient()) {
-                       liff.closeWindow();
+                         liff.closeWindow();
                   } else {
-                       window.location.reload();
+                         window.location.reload();
                   }
              });
 
@@ -257,7 +296,4 @@
 </script>
 
 </body>
-
 </html>
-
-
