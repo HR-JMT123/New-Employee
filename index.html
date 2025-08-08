@@ -15,7 +15,7 @@
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
-            background-image: url('https://img2.pic.in.th/pic/-9937eccdf27aa35b4.png');
+            background-image: url('https://img2.pic.in.th/pic/Cover808900978ea91797.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -197,8 +197,8 @@
                     <canvas id="id-card-canvas" style="display:none;"></canvas>
                     <img id="id-card-photo-preview" src="" alt="รูปบัตรที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin: auto;" />
                     <div id="id-card-camera-placeholder">
-                        <i class="fas fa-id-card fa-3x text-muted"></i>
-                        <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูปบัตร</p>
+                          <i class="fas fa-id-card fa-3x text-muted"></i>
+                          <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูปบัตร</p>
                     </div>
                 </div>
                 <div class="text-center mt-2">
@@ -321,7 +321,6 @@ document.addEventListener('DOMContentLoaded', function() {
             retakeBtn.style.display = 'inline-block';
 
             if (currentStream) currentStream.getTracks().forEach(track => track.stop());
-            checkAllDataFilled();
         };
 
         startBtn.addEventListener('click', startCamera);
@@ -353,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
         previewId: 'id-card-photo-preview',
         dataInputId: 'idCardPhotoData',
         placeholderId: 'id-card-camera-placeholder',
-        facingMode: 'environment' // <-- [แก้ไข] กำหนดค่าเป็น 'environment' เพื่อใช้กล้องหลัง
+        facingMode: 'environment' // กล้องหลัง
     });
 
 
@@ -362,7 +361,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const employeeId = this.value.trim();
         fullNameInput.value = '';
         nationalIdInput.value = '';
-        checkAllDataFilled();
         
         if (employeeId === '') return;
 
@@ -388,43 +386,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else { // 'invalid_employee_id'
                     Swal.fire('ไม่พบข้อมูล', 'ไม่พบรหัสพนักงานนี้ในระบบ กรุณาตรวจสอบอีกครั้ง', 'error');
                 }
-                checkAllDataFilled();
             })
             .catch(error => {
                 Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้', 'error');
                 console.error('Error fetching employee data:', error);
-                checkAllDataFilled();
             });
     });
 
     // --- Consent & Submit Button ---
-    // Function to check if all required fields are filled to enable the submit button
-    const checkAllDataFilled = () => {
-        const isEmployeeIdFilled = employeeIdInput.value.trim() !== '';
-        const isFullNameFilled = fullNameInput.value.trim() !== '';
-        const isNationalIdFilled = nationalIdInput.value.trim() !== '';
-        const isFacePhotoTaken = document.getElementById('facePhotoData').value !== '';
-        const isIdCardPhotoTaken = document.getElementById('idCardPhotoData').value !== '';
-        const isConsentChecked = consentCheckbox.checked;
-
-        registerBtn.disabled = !(isEmployeeIdFilled && isFullNameFilled && isNationalIdFilled && isFacePhotoTaken && isIdCardPhotoTaken && isConsentChecked);
-    };
-
-    // Add event listeners to all relevant inputs
-    [employeeIdInput, consentCheckbox].forEach(el => el.addEventListener('input', checkAllDataFilled));
-    consentCheckbox.addEventListener('change', checkAllDataFilled);
-
-    // Initial check
-    checkAllDataFilled();
+    consentCheckbox.addEventListener('change', function() {
+        registerBtn.disabled = !this.checked;
+    });
 
     // --- Form Submission ---
     form.addEventListener('submit', e => {
         e.preventDefault();
 
-        // Re-check everything before submitting
-        checkAllDataFilled();
-        if (registerBtn.disabled) {
-            Swal.fire('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูล ถ่ายรูป และทำเครื่องหมายยินยอมให้ครบถ้วน', 'warning');
+        // [แก้ไข] เพิ่มการตรวจสอบรูปถ่ายบัตรประชาชน
+        if (document.getElementById('facePhotoData').value === '') {
+             Swal.fire('ยังไม่ได้ถ่ายรูป', 'กรุณาถ่ายรูปใบหน้าเพื่อยืนยันตัวตน', 'warning');
+             return;
+        }
+        if (document.getElementById('idCardPhotoData').value === '') {
+             Swal.fire('ยังไม่ได้ถ่ายรูป', 'กรุณาถ่ายรูปบัตรประชาชนเพื่อยืนยันตัวตน', 'warning');
+             return;
+        }
+        
+        if (!form.checkValidity()) {
+            Swal.fire('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูลและทำเครื่องหมายยินยอมให้ครบถ้วนก่อน', 'warning');
             return;
         }
         
