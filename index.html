@@ -187,11 +187,10 @@
             <div class="mb-3">
                 <label class="form-label">ถ่ายรูปบัตรประชาชน</label>
                 <div id="id-card-camera-container" class="text-center bg-light p-2" style="border-radius: 10px; position: relative; overflow: hidden;">
-                    <video id="face-video" width="100%" height="auto" autoplay playsinline style="display: none; transform: scaleX(-1);"></video>
+                    <video id="id-card-video" width="100%" height="auto" autoplay playsinline style="display: none;"></video>
                     <canvas id="id-card-canvas" style="display:none;"></canvas>
                     <img id="id-card-overlay"
-                         
-                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none; pointer-events: none; opacity: 0.7;">
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none; pointer-events: none; opacity: 0.8;">
                     <img id="id-card-photo-preview" src="" alt="รูปบัตรที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin: auto;" />
                     <div id="id-card-camera-placeholder">
                           <i class="fas fa-id-card fa-3x text-muted"></i>
@@ -367,8 +366,10 @@ document.addEventListener('DOMContentLoaded', function() {
         startCamera: async function() {
             this.reset();
             try {
-                // ขอความละเอียดสูงขึ้นเพื่อภาพที่คมชัด
-                const constraints = { video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } } };
+                // ▼▼▼ EDIT START ▼▼▼
+                // ปรับค่า constraints ให้มีขนาดและอัตราส่วนเดียวกับกล้องหน้า
+                const constraints = { video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } } };
+                // ▲▲▲ EDIT END ▲▲▲
                 this.stream = await navigator.mediaDevices.getUserMedia(constraints);
                 this.video.srcObject = this.stream;
                 this.updateUI('camera');
