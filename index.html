@@ -125,6 +125,22 @@
             border-color: #1E8449;
             background-color: #28B463;
         }
+        /* */
+        .zoom-controls {
+            display: none; /* ซ่อนไว้ก่อนเป็นค่าเริ่มต้น */
+            padding: 8px 0;
+            text-align: center;
+        }
+        .zoom-controls label {
+            font-size: 0.8rem;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .zoom-controls input[type="range"] {
+            width: 60%;
+            vertical-align: middle;
+        }
+        /* */
         @media (max-width: 768px) {
             .register-image-side { display: none; }
             .register-form-side { width: 100%; padding: 2rem; }
@@ -205,7 +221,11 @@
                           <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูปบัตร</p>
                     </div>
                 </div>
-                <div class="text-center mt-2">
+                <div id="zoom-controls-container" class="zoom-controls">
+                     <label for="zoom-slider"><i class="fas fa-search-plus"></i> ซูม:</label>
+                     <input type="range" id="zoom-slider">
+                </div>
+                 <div class="text-center mt-2">
                     <button type="button" id="start-id-card-camera-btn" class="btn btn-info btn-sm"> <i class="fas fa-camera-rotate"></i> เปิดกล้องหลัง</button>
                     <button type="button" id="capture-id-card-btn" class="btn btn-primary btn-sm" style="display: none;"> <i class="fas fa-circle-check"></i> ถ่ายรูป</button>
                     <button type="button" id="retake-id-card-btn" class="btn btn-warning btn-sm" style="display: none;"> <i class="fas fa-redo"></i> ถ่ายใหม่</button>
@@ -245,7 +265,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('LIFF initialization failed', error);
-            // แจ้งเตือนผู้ใช้ถ้าจำเป็น
         }
     }
     main();
@@ -259,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fullNameInput = document.getElementById('fullName');
     const nationalIdInput = document.getElementById('nationalId');
 
-    // --- ✨ [ปรับปรุงใหม่] REUSABLE CAMERA LOGIC ---
+    // --- ✨ [ปรับปรุงใหม่] REUSABLE CAMERA LOGIC with ZOOM & FOCUS ---
     function setupCamera(options) {
         const startBtn = document.getElementById(options.startBtnId);
         const captureBtn = document.getElementById(options.captureBtnId);
@@ -270,6 +289,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const dataInputEl = document.getElementById(options.dataInputId);
         const placeholderEl = document.getElementById(options.placeholderId);
         const overlayEl = options.overlayId ? document.getElementById(options.overlayId) : null;
+        
+        // 📍 [เพิ่มใหม่] ดึง Element ของส่วนควบคุมการซูม
+        const zoomControlsContainer = options.zoomControlsContainerId ? document.getElementById(options.zoomControlsContainerId) : null;
+        const zoomSlider = options.zoomSliderId ? document.getElementById(options.zoomSliderId) : null;
 
         let currentStream;
 
@@ -277,14 +300,22 @@ document.addEventListener('DOMContentLoaded', function() {
             if (currentStream) {
                 currentStream.getTracks().forEach(track => track.stop());
             }
+
+            // 📍 [แก้ไข] ซ่อนแถบซูมทุกครั้งที่เริ่มกล้องใหม่
+            if(zoomControlsContainer) zoomControlsContainer.style.display = 'none';
+
             try {
+                // 📍 [แก้ไข] ปรับปรุง constraints เพื่อขอคุณภาพที่ดีขึ้นและ Auto Focus
                 const constraints = {
                     video: {
                         facingMode: options.facingMode,
-                        width: { ideal: 640 },
-                        height: { ideal: 480 }
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        // พยายามเปิดใช้โหมดโฟกัสต่อเนื่องเพื่อให้ภาพคมชัดเสมอ
+                        focusMode: 'continuous' 
                     }
                 };
+                
                 currentStream = await navigator.mediaDevices.getUserMedia(constraints);
                 videoEl.srcObject = currentStream;
                 videoEl.style.display = 'block';
@@ -296,9 +327,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 captureBtn.style.display = 'inline-block';
                 retakeBtn.style.display = 'none';
 
+                // 📍 [เพิ่มใหม่] ตรวจสอบและตั้งค่าการซูม
+                const [track] = currentStream.getVideoTracks();
+                const capabilities = track.getCapabilities();
+
+                if (zoomSlider && 'zoom' in capabilities) {
+                    zoomControlsContainer.style.display = 'block'; // แสดงแถบซูม
+                    zoomSlider.min = capabilities.zoom.min;
+                    zoomSlider.max = capabilities.zoom.max;
+                    zoomSlider.step = capabilities.zoom.step;
+                    zoomSlider.value = track.getSettings().zoom || capabilities.zoom.min; // ตั้งค่าเริ่มต้น
+
+                    zoomSlider.oninput = (event) => {
+                        track.applyConstraints({ advanced: [{ zoom: event.target.value }] });
+                    };
+                }
+
             } catch (err) {
                 console.error(`Error accessing ${options.facingMode} camera:`, err);
-                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตให้ใช้กล้องในเบราว์เซอร์หรือแอปพลิเคชัน LINE', 'error');
+                Swal.fire('เกิดข้อผิดพลาด', `ไม่สามารถเข้าถึงกล้องได้: ${err.name}. กรุณาตรวจสอบการอนุญาตให้ใช้กล้องในเบราว์เซอร์หรือแอปพลิเคชัน LINE`, 'error');
             }
         };
 
@@ -307,7 +354,6 @@ document.addEventListener('DOMContentLoaded', function() {
             canvasEl.width = videoEl.videoWidth;
             canvasEl.height = videoEl.videoHeight;
             
-            // พลิกรูปสำหรับกล้องหน้าเท่านั้น
             if (options.facingMode === 'user') {
                 context.translate(canvasEl.width, 0);
                 context.scale(-1, 1);
@@ -323,6 +369,9 @@ document.addEventListener('DOMContentLoaded', function() {
             previewEl.style.display = 'block';
             captureBtn.style.display = 'none';
             retakeBtn.style.display = 'inline-block';
+
+            // 📍 [เพิ่มใหม่] ซ่อนแถบซูมหลังถ่ายรูป
+            if(zoomControlsContainer) zoomControlsContainer.style.display = 'none';
 
             if (currentStream) currentStream.getTracks().forEach(track => track.stop());
         };
@@ -343,10 +392,11 @@ document.addEventListener('DOMContentLoaded', function() {
         dataInputId: 'facePhotoData',
         placeholderId: 'face-camera-placeholder',
         overlayId: 'face-overlay',
-        facingMode: 'user' // กล้องหน้า
+        facingMode: 'user'
     });
 
     // Initialize ID Card Camera (กล้องหลัง)
+    // 📍 [แก้ไข] เพิ่ม ID ของส่วนควบคุมการซูมเข้าไปใน options
     setupCamera({
         startBtnId: 'start-id-card-camera-btn',
         captureBtnId: 'capture-id-card-btn',
@@ -356,10 +406,11 @@ document.addEventListener('DOMContentLoaded', function() {
         previewId: 'id-card-photo-preview',
         dataInputId: 'idCardPhotoData',
         placeholderId: 'id-card-camera-placeholder',
-        overlayId: 'id-card-overlay', // <--- [แก้ไข] เพิ่ม ID ของกรอบบัตรประชาชนที่นี่
-        facingMode: 'environment' // กล้องหลัง
+        overlayId: 'id-card-overlay',
+        facingMode: 'environment',
+        zoomControlsContainerId: 'zoom-controls-container', // ID ของ div ที่ครอบ slider
+        zoomSliderId: 'zoom-slider' // ID ของ slider
     });
-
 
     // --- Employee ID Verification ---
     employeeIdInput.addEventListener('blur', function() {
@@ -407,7 +458,6 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', e => {
         e.preventDefault();
 
-        // [แก้ไข] เพิ่มการตรวจสอบรูปถ่ายบัตรประชาชน
         if (document.getElementById('facePhotoData').value === '') {
              Swal.fire('ยังไม่ได้ถ่ายรูป', 'กรุณาถ่ายรูปใบหน้าเพื่อยืนยันตัวตน', 'warning');
              return;
