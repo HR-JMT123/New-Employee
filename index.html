@@ -159,14 +159,7 @@
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label for="nationalId" class="form-label">National ID</label>
-                <div class="input-group">
-                    <div class="input-group-prepend"><span class="input-group-text"><i class="fa-solid fa-id-card"></i></span></div>
-                    <input type="tel" class="form-control" id="nationalId" placeholder="เลขบัตรประชาชน (จะแสดงอัตโนมัติ)" name="บัตรประชาชน" required maxlength="13" pattern="\d{13}" readonly>
-                </div>
-            </div>
-            
+            <input type="hidden" id="nationalId" name="บัตรประชาชน" required>
             <input type="hidden" name="Key" id="userID">
             <div class="mb-3">
                 <label class="form-label">สแกนใบหน้า (ถ่ายรูป)</label>
