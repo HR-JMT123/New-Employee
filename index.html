@@ -174,7 +174,7 @@
                     <video id="face-video" width="100%" height="auto" autoplay playsinline style="display: none; transform: scaleX(-1);"></video>
                     <canvas id="face-canvas" style="display:none;"></canvas>
                     <img id="face-overlay" 
-                         src="https://img2.pic.in.th/pic/-9937eccdf27aa35b4.png" 
+                         src="https://img2.pic.in.th/pic/-44e1002fd11c7044b.png" 
                          alt="ตัวอย่างกรอบใบหน้า" 
                          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none; pointer-events: none; opacity: 0.7;">
                     <img id="face-photo-preview" src="" alt="รูปใบหน้าที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin: auto;" />
@@ -195,6 +195,10 @@
                 <div id="id-card-camera-container" class="text-center bg-light p-2" style="border-radius: 10px; position: relative; overflow: hidden;">
                     <video id="id-card-video" width="100%" height="auto" autoplay playsinline style="display: none;"></video>
                     <canvas id="id-card-canvas" style="display:none;"></canvas>
+                    <img id="id-card-overlay"
+                         src="https://img5.pic.in.th/file/secure-sv1/-101583db1e932988ee.png" 
+                         alt="กรอบบัตรประชาชน" 
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none; pointer-events: none; opacity: 0.8;">
                     <img id="id-card-photo-preview" src="" alt="รูปบัตรที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin: auto;" />
                     <div id="id-card-camera-placeholder">
                           <i class="fas fa-id-card fa-3x text-muted"></i>
@@ -352,6 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
         previewId: 'id-card-photo-preview',
         dataInputId: 'idCardPhotoData',
         placeholderId: 'id-card-camera-placeholder',
+        overlayId: 'id-card-overlay', // <--- [แก้ไข] เพิ่ม ID ของกรอบบัตรประชาชนที่นี่
         facingMode: 'environment' // กล้องหลัง
     });
 
@@ -461,4 +466,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </body>
 </html>
-
