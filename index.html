@@ -162,7 +162,7 @@
             <input type="hidden" id="nationalId" name="บัตรประชาชน" required>
             <input type="hidden" name="Key" id="userID">
             <div class="mb-3">
-                <label class="form-label">ถ่ายใบหน้า (ถ่ายแนวตั้ง)</label>
+                <label class="form-label">ถ่ายใบหน้า(ถ่ายแนวตั้ง)</label>
                 <div id="face-camera-container" class="text-center bg-light p-2" style="border-radius: 10px; position: relative; overflow: hidden;">
                     <video id="face-video" width="100%" height="auto" autoplay playsinline style="display: none; transform: scaleX(-1);"></video>
                     <canvas id="face-canvas" style="display:none;"></canvas>
@@ -184,6 +184,30 @@
                 <input type="hidden" name="รูปถ่ายใบหน้า" id="facePhotoData" required>
             </div>
             
+            <div class="mb-3">
+                <label class="form-label">ถ่ายรูปบัตรประชาชน(ถ่ายแนวนอน)</label>
+                <div id="id-card-camera-container" class="text-center bg-light p-2" style="border-radius: 10px; position: relative; overflow: hidden;">
+                    <video id="id-card-video" width="100%" height="auto" autoplay playsinline style="display: none;"></video>
+                    <canvas id="id-card-canvas" style="display:none;"></canvas>
+                    <img id="id-card-overlay"
+                         alt="กรอบบัตรประชาชน" 
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none; pointer-events: none; opacity: 0.8;">
+                    <img id="id-card-photo-preview" src="" alt="รูปบัตรที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin: auto;" />
+                    <div id="id-card-camera-placeholder">
+                          <i class="fas fa-id-card fa-3x text-muted"></i>
+                          <p class="text-muted mt-2">เลือก 'เปิดกล้อง' หรือ 'แนบไฟล์รูป'</p>
+                    </div>
+                </div>
+                <div class="text-center mt-2">
+                    <button type="button" id="start-id-card-camera-btn" class="btn btn-info btn-sm"> <i class="fas fa-camera-rotate"></i> เปิดกล้อง</button>
+                    <button type="button" id="upload-id-card-btn" class="btn btn-secondary btn-sm"> <i class="fas fa-upload"></i> แนบไฟล์รูป</button>
+                    <input type="file" id="id-card-file-input" accept="image/*" style="display:none;">
+                    
+                    <button type="button" id="capture-id-card-btn" class="btn btn-primary btn-sm" style="display: none;"> <i class="fas fa-circle-check"></i> ถ่ายรูป</button>
+                    <button type="button" id="reset-id-card-btn" class="btn btn-warning btn-sm" style="display: none;"> <i class="fas fa-redo"></i> ถ่าย/เลือกใหม่</button>
+                </div>
+                <input type="hidden" name="รูปถ่ายบัตรประชาชน" id="idCardPhotoData" required>
+            </div>
             <div class="consent-section">
                 <h5 class="consent-title"><i class="fa-solid fa-shield-halved"></i> ข้อกำหนดและความยินยอม</h5>
                 <div class="custom-control custom-switch">
@@ -208,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- LIFF Initialization ---
     async function main() {
         try {
-            await liff.init({ liffId: "1654380017-ad8j2NgM" }); // ◀️ **สำคัญ:** ใส่ LIFF ID ของคุณที่นี่
+            await liff.init({ liffId: "" }); // ◀️ **สำคัญ:** ใส่ LIFF ID ของคุณที่นี่
             if (!liff.isLoggedIn()) {
                 liff.login();
             } else {
@@ -299,9 +323,95 @@ document.addEventListener('DOMContentLoaded', function() {
         overlayId: 'face-overlay'
     });
 
-    // --- START: SCRIPT REMOVED ---
-    // ส่วนของ Logic การถ่ายรูป/อัปโหลดบัตรประชาชน (idCard object) ถูกลบออกไปแล้ว
-    // --- END: SCRIPT REMOVED ---
+    // --- ✨ [ปรับปรุงใหม่] ID CARD LOGIC (Camera & File Upload) ---
+    const idCard = {
+        startBtn: document.getElementById('start-id-card-camera-btn'),
+        uploadBtn: document.getElementById('upload-id-card-btn'),
+        fileInput: document.getElementById('id-card-file-input'),
+        captureBtn: document.getElementById('capture-id-card-btn'),
+        resetBtn: document.getElementById('reset-id-card-btn'),
+        video: document.getElementById('id-card-video'),
+        canvas: document.getElementById('id-card-canvas'),
+        preview: document.getElementById('id-card-photo-preview'),
+        dataInput: document.getElementById('idCardPhotoData'),
+        placeholder: document.getElementById('id-card-camera-placeholder'),
+        overlay: document.getElementById('id-card-overlay'),
+        stream: null,
+
+        init: function() {
+            this.startBtn.addEventListener('click', () => this.startCamera());
+            this.uploadBtn.addEventListener('click', () => this.fileInput.click());
+            this.fileInput.addEventListener('change', (e) => this.handleFileUpload(e));
+            this.captureBtn.addEventListener('click', () => this.captureImage());
+            this.resetBtn.addEventListener('click', () => this.reset());
+        },
+
+        updateUI: function(state) {
+            this.startBtn.style.display = state === 'initial' ? 'inline-block' : 'none';
+            this.uploadBtn.style.display = state === 'initial' ? 'inline-block' : 'none';
+            this.placeholder.style.display = state === 'initial' ? 'block' : 'none';
+            
+            this.video.style.display = state === 'camera' ? 'block' : 'none';
+            this.overlay.style.display = state === 'camera' ? 'block' : 'none';
+            this.captureBtn.style.display = state === 'camera' ? 'inline-block' : 'none';
+
+            this.preview.style.display = state === 'preview' ? 'block' : 'none';
+            this.resetBtn.style.display = state === 'preview' || state === 'camera' ? 'inline-block' : 'none';
+            
+            if (state !== 'camera' && this.stream) {
+                 this.stream.getTracks().forEach(track => track.stop());
+                 this.stream = null;
+            }
+        },
+
+        startCamera: async function() {
+            this.reset();
+            try {
+                // ขอความละเอียดสูงขึ้นเพื่อภาพที่คมชัด
+                const constraints = { video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } } };
+                this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+                this.video.srcObject = this.stream;
+                this.updateUI('camera');
+            } catch (err) {
+                console.error("Error accessing rear camera:", err);
+                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเข้าถึงกล้องหลังได้ กรุณาตรวจสอบการอนุญาต', 'error');
+                this.reset();
+            }
+        },
+        
+        captureImage: function() {
+            const context = this.canvas.getContext('2d');
+            this.canvas.width = this.video.videoWidth;
+            this.canvas.height = this.video.videoHeight;
+            context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+            const dataUrl = this.canvas.toDataURL('image/jpeg', 0.95); // เพิ่ม quality เล็กน้อย
+            this.dataInput.value = dataUrl;
+            this.preview.src = dataUrl;
+            this.updateUI('preview');
+        },
+
+        handleFileUpload: function(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.dataInput.value = e.target.result;
+                    this.preview.src = e.target.result;
+                    this.updateUI('preview');
+                };
+                reader.readAsDataURL(file);
+            }
+            // Reset a file input value to allow re-uploading the same file
+            event.target.value = '';
+        },
+        
+        reset: function() {
+            this.dataInput.value = '';
+            this.preview.src = '';
+            this.updateUI('initial');
+        }
+    };
+    idCard.init();
 
     // --- Employee ID Verification ---
     employeeIdInput.addEventListener('blur', function() {
@@ -348,9 +458,10 @@ document.addEventListener('DOMContentLoaded', function() {
              Swal.fire('ยังไม่ได้ถ่ายรูป', 'กรุณาถ่ายรูปใบหน้าเพื่อยืนยันตัวตน', 'warning');
              return;
         }
-        // --- START: VALIDATION REMOVED ---
-        // การตรวจสอบว่ามีการถ่ายรูปบัตรประชาชนแล้วหรือไม่ ถูกลบออกไป
-        // --- END: VALIDATION REMOVED ---
+        if (document.getElementById('idCardPhotoData').value === '') {
+             Swal.fire('ยังไม่ได้ถ่ายรูป', 'กรุณาถ่ายรูปบัตรประชาชนหรือแนบไฟล์เพื่อยืนยันตัวตน', 'warning');
+             return;
+        }
         if (!form.checkValidity()) {
             Swal.fire('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูลและทำเครื่องหมายยินยอมให้ครบถ้วนก่อน', 'warning');
             return;
