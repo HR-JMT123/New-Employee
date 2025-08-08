@@ -168,6 +168,7 @@
             </div>
             
             <input type="hidden" name="Key" id="userID">
+            
             <div class="mb-3">
                 <label class="form-label">สแกนใบหน้า (ถ่ายรูป)</label>
                 <div id="face-camera-container" class="text-center bg-light p-2" style="border-radius: 10px; position: relative; overflow: hidden;">
@@ -190,6 +191,7 @@
                 </div>
                 <input type="hidden" name="รูปถ่ายใบหน้า" id="facePhotoData" required>
             </div>
+
             <div class="mb-3">
                 <label class="form-label">ถ่ายรูปบัตรประชาชน</label>
                 <div id="id-card-camera-container" class="text-center bg-light p-2" style="border-radius: 10px; position: relative; overflow: hidden;">
@@ -197,8 +199,8 @@
                     <canvas id="id-card-canvas" style="display:none;"></canvas>
                     <img id="id-card-photo-preview" src="" alt="รูปบัตรที่ถ่าย" style="max-width: 100%; border-radius: 10px; display: none; margin: auto;" />
                     <div id="id-card-camera-placeholder">
-                          <i class="fas fa-id-card fa-3x text-muted"></i>
-                          <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูปบัตร</p>
+                        <i class="fas fa-id-card fa-3x text-muted"></i>
+                        <p class="text-muted mt-2">กรุณากด 'เปิดกล้อง' เพื่อถ่ายรูปบัตร</p>
                     </div>
                 </div>
                 <div class="text-center mt-2">
@@ -208,6 +210,7 @@
                 </div>
                 <input type="hidden" name="รูปถ่ายบัตรประชาชน" id="idCardPhotoData" required>
             </div>
+
             <div class="consent-section">
                 <h5 class="consent-title"><i class="fa-solid fa-shield-halved"></i> ข้อกำหนดและความยินยอม</h5>
                 <div class="custom-control custom-switch">
@@ -255,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fullNameInput = document.getElementById('fullName');
     const nationalIdInput = document.getElementById('nationalId');
 
-    // --- ✨ [ปรับปรุงใหม่] REUSABLE CAMERA LOGIC ---
+    // --- ✨ REUSABLE CAMERA LOGIC ---
     function setupCamera(options) {
         const startBtn = document.getElementById(options.startBtnId);
         const captureBtn = document.getElementById(options.captureBtnId);
@@ -276,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const constraints = {
                     video: {
-                        facingMode: options.facingMode,
+                        facingMode: options.facingMode, // ◀️ **Key Change:** 'user' for front, 'environment' for back
                         width: { ideal: 640 },
                         height: { ideal: 480 }
                     }
@@ -303,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
             canvasEl.width = videoEl.videoWidth;
             canvasEl.height = videoEl.videoHeight;
             
-            // พลิกรูปสำหรับกล้องหน้าเท่านั้น
+            // พลิกรูปสำหรับกล้องหน้าเท่านั้น (เพื่อให้ภาพที่ได้ไม่กลับด้านเหมือนกระจก)
             if (options.facingMode === 'user') {
                 context.translate(canvasEl.width, 0);
                 context.scale(-1, 1);
@@ -339,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dataInputId: 'facePhotoData',
         placeholderId: 'face-camera-placeholder',
         overlayId: 'face-overlay',
-        facingMode: 'user' // กล้องหน้า
+        facingMode: 'user' // ◀️ กำหนดเป็น 'user' เพื่อใช้กล้องหน้า
     });
 
     // Initialize ID Card Camera (กล้องหลัง)
@@ -352,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
         previewId: 'id-card-photo-preview',
         dataInputId: 'idCardPhotoData',
         placeholderId: 'id-card-camera-placeholder',
-        facingMode: 'environment' // กล้องหลัง
+        facingMode: 'environment' // ◀️ กำหนดเป็น 'environment' เพื่อใช้กล้องหลัง
     });
 
 
@@ -402,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', e => {
         e.preventDefault();
 
-        // [แก้ไข] เพิ่มการตรวจสอบรูปถ่ายบัตรประชาชน
+        // ตรวจสอบว่าถ่ายรูปครบทั้งสองส่วนแล้ว
         if (document.getElementById('facePhotoData').value === '') {
              Swal.fire('ยังไม่ได้ถ่ายรูป', 'กรุณาถ่ายรูปใบหน้าเพื่อยืนยันตัวตน', 'warning');
              return;
